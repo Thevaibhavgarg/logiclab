@@ -1,0 +1,102 @@
+@import 'reactflow/dist/style.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --neon: #39ff14;
+  --wire-high: #39ff14;
+  --wire-low: #374151;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #0f0f0f;
+  color: #f3f4f6;
+  font-family: system-ui, sans-serif;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Wires ─────────────────────────────────────────── */
+.wire {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 120ms ease, filter 120ms ease;
+}
+.wire-high {
+  stroke: #39ff14;
+  stroke-width: 2.5px;
+  filter: drop-shadow(0 0 4px #39ff14aa);
+}
+.wire-low {
+  stroke: #374151;
+  stroke-width: 1.5px;
+}
+.wire-selected {
+  stroke: #60a5fa !important;
+  stroke-width: 2.5px;
+  filter: drop-shadow(0 0 4px #60a5fa88);
+}
+@keyframes dash-flow {
+  to { stroke-dashoffset: -20; }
+}
+.wire-animated {
+  stroke-dasharray: 6 4;
+  animation: dash-flow 0.4s linear infinite;
+}
+
+/* ── Handles ────────────────────────────────────────── */
+.react-flow__handle {
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  border: 1.5px solid #4b5563 !important;
+  background-color: #1f2937 !important;
+  z-index: 10;
+}
+.react-flow__handle.handle-high {
+  background-color: #39ff14 !important;
+  box-shadow: 0 0 6px #39ff14;
+  border-color: #39ff14 !important;
+}
+
+/* ── React Flow canvas overrides ────────────────────── */
+.react-flow__renderer { background: #0f0f0f; }
+.react-flow__background { background: #0f0f0f !important; }
+.react-flow__minimap { background: #1a1a2e !important; border: 1px solid #374151 !important; }
+.react-flow__minimap-mask { fill: #0f0f0f88 !important; }
+.react-flow__controls {
+  background: #1a1a2e !important;
+  border: 1px solid #374151 !important;
+  box-shadow: none !important;
+  border-radius: 6px !important;
+}
+.react-flow__controls-button {
+  background: #1a1a2e !important;
+  border-bottom: 1px solid #374151 !important;
+  fill: #9ca3af !important;
+}
+.react-flow__controls-button:hover { background: #374151 !important; }
+.react-flow__edge-path { pointer-events: visibleStroke; }
+
+/* ── Scrollbars ─────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #111827; }
+::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+
+/* ── Gate node glow ─────────────────────────────────── */
+.gate-svg-high { filter: drop-shadow(0 0 7px #39ff1466); }
+.output-led-high { filter: drop-shadow(0 0 10px #39ff14); }
