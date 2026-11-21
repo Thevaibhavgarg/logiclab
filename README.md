@@ -79,6 +79,9 @@ Contributions and bug reports are welcome. Open an issue to describe a bug or pr
 Before submitting a pull request, run `npm test`, `npm run lint`, and
 `npm run build`. Add a regression test when fixing simulator behavior.
 
+The [CI workflow](./.github/workflows/ci.yml) runs these checks on pushes to
+`main` and on pull requests. It can also be run manually from GitHub's **Actions** tab.
+
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.
