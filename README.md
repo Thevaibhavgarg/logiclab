@@ -1,0 +1,74 @@
+# LogicLab
+
+LogicLab is a browser-based logic circuit simulator. Build circuits by connecting logic gates, input switches, and output LEDs on an interactive canvas. See signals update as you change inputs, and generate truth tables for combinational circuits.
+
+## Features
+
+- Drag-and-drop circuit editor with a zoomable, pannable canvas
+- AND, OR, NOT, XOR, NAND, and NOR logic gates
+- Input switches and output LEDs
+- SR latches and D flip-flops for sequential circuits
+- Live signal simulation and node signal inspection
+- Truth-table generation for combinational circuits with up to 10 inputs
+- Save circuits in your browser, or import and export circuits as JSON files
+
+## Requirements
+
+- [Node.js](https://nodejs.org/) 20.19+ or 22.12+
+- npm (included with Node.js)
+
+## Getting started
+
+1. Clone the repository and open its directory:
+
+   ```bash
+   git clone https://github.com/Thevaibhavgarg/logiclab.git
+   cd logiclab
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Open the local URL printed by Vite in your browser.
+
+## Using LogicLab
+
+1. Drag components from the left-hand toolbox onto the canvas.
+2. Connect an output handle to an input handle to wire components together.
+3. Click an input switch to toggle it between `0` and `1`. Signals propagate through the circuit automatically.
+4. Select a node to inspect its inputs and outputs in the Properties panel. You can edit its label there.
+5. To generate a truth table, add at least one Input and one Output node, open the **Truth Table** tab, and select **Generate Truth Table**. Truth tables are limited to 10 inputs and are not available for circuits containing sequential components.
+6. To keep a circuit, enter a name in the toolbar and select **Save**. Use **Load** to access circuits saved in this browser. Saves are stored in the browser's local storage.
+7. Use **Export** to download a circuit as a JSON file, or **Import** to load a previously exported JSON file.
+
+Select a node or wire and press **Delete** or **Backspace** to remove it. Select **New** to clear the canvas; the app asks for confirmation first.
+
+## Available commands
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the local development server |
+| `npm run build` | Type-check the project and create a production build in `dist/` |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run Oxlint |
+
+## Built with
+
+React, TypeScript, Vite, React Flow, Zustand, and Tailwind CSS.
+
+## Contributing
+
+Contributions and bug reports are welcome. Open an issue to describe a bug or propose a change, or submit a pull request with a clear summary of the work.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.
