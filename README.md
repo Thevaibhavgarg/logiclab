@@ -52,6 +52,12 @@ LogicLab is a browser-based logic circuit simulator. Build circuits by connectin
 
 Select a node or wire and press **Delete** or **Backspace** to remove it. Select **New** to clear the canvas; the app asks for confirmation first.
 
+## Example and tutorial
+
+Start with the [half-adder tutorial](./docs/half-adder-tutorial.md) to learn wiring,
+input toggling, truth tables, and saving. You can also import the ready-made
+[half-adder circuit](./examples/half-adder.logiclab.json) using the toolbar's **Import** button.
+
 ## Available commands
 
 | Command | Description |

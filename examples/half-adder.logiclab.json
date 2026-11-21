@@ -1,0 +1,131 @@
+{
+  "version": "1.0",
+  "name": "Half Adder",
+  "savedAt": "2026-11-21T06:00:00.000Z",
+  "nodes": [
+    {
+      "id": "input-a",
+      "type": "inputNode",
+      "position": { "x": 80, "y": 80 },
+      "data": {
+        "gateType": "INPUT",
+        "label": "A",
+        "value": 0,
+        "inputSignals": {},
+        "outputSignals": {}
+      }
+    },
+    {
+      "id": "input-b",
+      "type": "inputNode",
+      "position": { "x": 80, "y": 240 },
+      "data": {
+        "gateType": "INPUT",
+        "label": "B",
+        "value": 0,
+        "inputSignals": {},
+        "outputSignals": {}
+      }
+    },
+    {
+      "id": "sum-gate",
+      "type": "gateNode",
+      "position": { "x": 320, "y": 80 },
+      "data": {
+        "gateType": "XOR",
+        "label": "XOR",
+        "inputSignals": {},
+        "outputSignals": {}
+      }
+    },
+    {
+      "id": "carry-gate",
+      "type": "gateNode",
+      "position": { "x": 320, "y": 240 },
+      "data": {
+        "gateType": "AND",
+        "label": "AND",
+        "inputSignals": {},
+        "outputSignals": {}
+      }
+    },
+    {
+      "id": "sum-output",
+      "type": "outputNode",
+      "position": { "x": 560, "y": 80 },
+      "data": {
+        "gateType": "OUTPUT",
+        "label": "Sum",
+        "inputSignals": {},
+        "outputSignals": {}
+      }
+    },
+    {
+      "id": "carry-output",
+      "type": "outputNode",
+      "position": { "x": 560, "y": 240 },
+      "data": {
+        "gateType": "OUTPUT",
+        "label": "Carry",
+        "inputSignals": {},
+        "outputSignals": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "a-to-xor",
+      "source": "input-a",
+      "sourceHandle": "output-0",
+      "target": "sum-gate",
+      "targetHandle": "input-0",
+      "type": "signalEdge",
+      "data": { "signal": 0 }
+    },
+    {
+      "id": "b-to-xor",
+      "source": "input-b",
+      "sourceHandle": "output-0",
+      "target": "sum-gate",
+      "targetHandle": "input-1",
+      "type": "signalEdge",
+      "data": { "signal": 0 }
+    },
+    {
+      "id": "a-to-and",
+      "source": "input-a",
+      "sourceHandle": "output-0",
+      "target": "carry-gate",
+      "targetHandle": "input-0",
+      "type": "signalEdge",
+      "data": { "signal": 0 }
+    },
+    {
+      "id": "b-to-and",
+      "source": "input-b",
+      "sourceHandle": "output-0",
+      "target": "carry-gate",
+      "targetHandle": "input-1",
+      "type": "signalEdge",
+      "data": { "signal": 0 }
+    },
+    {
+      "id": "xor-to-sum",
+      "source": "sum-gate",
+      "sourceHandle": "output-0",
+      "target": "sum-output",
+      "targetHandle": "input-0",
+      "type": "signalEdge",
+      "data": { "signal": 0 }
+    },
+    {
+      "id": "and-to-carry",
+      "source": "carry-gate",
+      "sourceHandle": "output-0",
+      "target": "carry-output",
+      "targetHandle": "input-0",
+      "type": "signalEdge",
+      "data": { "signal": 0 }
+    }
+  ]
+}
