@@ -14,7 +14,7 @@ LogicLab is a browser-based logic circuit simulator. Build circuits by connectin
 
 ## Requirements
 
-- [Node.js](https://nodejs.org/) 20.19+ or 22.12+
+- [Node.js](https://nodejs.org/) 22.12+ (Node 22 or a newer supported LTS release)
 - npm (included with Node.js)
 
 ## Getting started
@@ -66,6 +66,7 @@ input toggling, truth tables, and saving. You can also import the ready-made
 | `npm run build` | Type-check the project and create a production build in `dist/` |
 | `npm run preview` | Preview the production build locally |
 | `npm run lint` | Run Oxlint |
+| `npm test` | Run simulator, sequential-state, and truth-table tests |
 
 ## Built with
 
@@ -74,6 +75,9 @@ React, TypeScript, Vite, React Flow, Zustand, and Tailwind CSS.
 ## Contributing
 
 Contributions and bug reports are welcome. Open an issue to describe a bug or propose a change, or submit a pull request with a clear summary of the work.
+
+Before submitting a pull request, run `npm test`, `npm run lint`, and
+`npm run build`. Add a regression test when fixing simulator behavior.
 
 ## License
 
