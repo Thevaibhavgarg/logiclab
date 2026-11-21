@@ -80,6 +80,10 @@ React, TypeScript, Vite, React Flow, Zustand, and Tailwind CSS.
 
 Contributions and bug reports are welcome. Open an issue to describe a bug or propose a change, or submit a pull request with a clear summary of the work.
 
+Read the [contribution guide](./CONTRIBUTING.md) for setup, testing, and pull
+request instructions. Please follow our [Code of Conduct](./CODE_OF_CONDUCT.md)
+when participating.
+
 Before submitting a pull request, run `npm test`, `npm run lint`, and
 `npm run build`. Add a regression test when fixing simulator behavior.
 
