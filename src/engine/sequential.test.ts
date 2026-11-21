@@ -54,3 +54,76 @@ describe('D flip-flop', () => {
     }
   });
 });
+
+describe('sequential output propagation', () => {
+  it.each(['SR_LATCH', 'D_FLIPFLOP'] as const)(
+    '%s updates downstream gates and outputs in the same simulation',
+    type => {
+      const nodes = [
+        node('OUTPUT', 'out'),
+        node('AND', 'and'),
+        node('NOT', 'not'),
+        node('OUTPUT', 'q'),
+        node('OUTPUT', 'qn'),
+        node(type, 'seq'),
+        node('INPUT', 'high', { value: 1 }),
+        node('INPUT', 'control', { value: type === 'SR_LATCH' ? 0 : 1 }),
+      ];
+      const edges = [
+        wire('high', 'seq', type === 'SR_LATCH' ? 'input-s' : 'input-d'),
+        wire('control', 'seq', type === 'SR_LATCH' ? 'input-r' : 'input-clk'),
+        wire('seq', 'q', 'input-0', 'output-q'),
+        wire('seq', 'qn', 'input-0', 'output-nq'),
+        wire('seq', 'not', 'input-0', 'output-q'),
+        wire('not', 'and'),
+        wire('not', 'and', 'input-1'),
+        wire('and', 'out'),
+      ];
+      const before = structuredClone({ nodes, edges });
+      const { signalMap } = simulateCircuit(nodes, edges);
+      expect(signalMap.get('seq')).toEqual({ 'output-q': 1, 'output-nq': 0 });
+      expect(signalMap.get('q')).toEqual({ 'output-0': 1 });
+      expect(signalMap.get('qn')).toEqual({ 'output-0': 0 });
+      expect(signalMap.get('not')).toEqual({ 'output-0': 0 });
+      expect(signalMap.get('and')).toEqual({ 'output-0': 0 });
+      expect(signalMap.get('out')).toEqual({ 'output-0': 0 });
+      expect({ nodes, edges }).toEqual(before);
+    },
+  );
+
+  it('samples chained flip-flops from the previous state, without capturing twice', () => {
+    const first = node('D_FLIPFLOP', 'first');
+    const second = node('D_FLIPFLOP', 'second');
+    const edges = [
+      wire('d', 'first', 'input-d'),
+      wire('clk', 'first', 'input-clk'),
+      wire('clk', 'second', 'input-clk'),
+      wire('first', 'second', 'input-d', 'output-q'),
+      wire('first', 'first-out', 'input-0', 'output-q'),
+      wire('second', 'second-out', 'input-0', 'output-q'),
+    ];
+    const steps: { clk: SignalValue; firstQ: SignalValue; secondQ: SignalValue }[] = [
+      { clk: 1, firstQ: 1, secondQ: 0 },
+      { clk: 1, firstQ: 1, secondQ: 0 },
+      { clk: 0, firstQ: 1, secondQ: 0 },
+      { clk: 1, firstQ: 1, secondQ: 1 },
+    ];
+    for (const { clk, firstQ, secondQ } of steps) {
+      const { signalMap, sequentialStates } = simulateCircuit(
+        [
+          second, first,
+          node('INPUT', 'd', { value: 1 }),
+          node('INPUT', 'clk', { value: clk }),
+          node('OUTPUT', 'first-out'), node('OUTPUT', 'second-out'),
+        ],
+        edges,
+      );
+      expect(sequentialStates.get('first')?.Q).toBe(firstQ);
+      expect(sequentialStates.get('second')?.Q).toBe(secondQ);
+      expect(signalMap.get('first-out')).toEqual({ 'output-0': firstQ });
+      expect(signalMap.get('second-out')).toEqual({ 'output-0': secondQ });
+      first.data.sequentialState = sequentialStates.get('first');
+      second.data.sequentialState = sequentialStates.get('second');
+    }
+  });
+});

@@ -52,6 +52,10 @@ LogicLab is a browser-based logic circuit simulator. Build circuits by connectin
 
 Select a node or wire and press **Delete** or **Backspace** to remove it. Select **New** to clear the canvas; the app asks for confirmation first.
 
+For sequential circuits, D flip-flops capture on a rising clock edge (`0` to `1`).
+Latch and flip-flop state changes propagate through downstream gates during the
+same simulation update. Chained flip-flops sample the previous state on that edge.
+
 ## Example and tutorial
 
 Start with the [half-adder tutorial](./docs/half-adder-tutorial.md) to learn wiring,

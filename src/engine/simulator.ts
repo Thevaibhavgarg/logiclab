@@ -27,7 +27,6 @@ export function simulateCircuit(
   const sequentialStates = new Map<string, { Q: SignalValue; Qn: SignalValue; prevClk?: SignalValue }>();
 
   nodes.forEach(node => {
-    resolvedInputs.set(node.id, {});
     if (node.data.gateType === 'INPUT') {
       const v = node.data.value ?? 0;
       signalMap.set(node.id, { 'output-0': v });
@@ -51,41 +50,47 @@ export function simulateCircuit(
     outEdges.set(edge.source, list);
   });
 
-  const queue: string[] = [];
-  inDegree.forEach((deg, id) => { if (deg === 0) queue.push(id); });
+  const propagateCombinational = () => {
+    const remainingInputs = new Map(inDegree);
+    nodes.forEach(node => { resolvedInputs.set(node.id, {}); });
+    const queue: string[] = [];
+    remainingInputs.forEach((deg, id) => { if (deg === 0) queue.push(id); });
 
-  while (queue.length > 0) {
-    const nodeId = queue.shift()!;
-    const node = nodes.find(n => n.id === nodeId);
-    if (!node) continue;
+    while (queue.length > 0) {
+      const nodeId = queue.shift()!;
+      const node = nodes.find(n => n.id === nodeId);
+      if (!node) continue;
 
-    if (node.data.gateType !== 'INPUT' &&
-        node.data.gateType !== 'SR_LATCH' &&
-        node.data.gateType !== 'D_FLIPFLOP') {
-      const inp = resolvedInputs.get(nodeId) ?? {};
-      const i0 = inp['input-0'] ?? 0;
-      const i1 = inp['input-1'] ?? 0;
-      if (node.data.gateType === 'OUTPUT') {
-        signalMap.set(nodeId, { 'output-0': i0 });
-      } else {
-        signalMap.set(nodeId, { 'output-0': evalGate(node.data.gateType, i0, i1) });
+      if (node.data.gateType !== 'INPUT' &&
+          node.data.gateType !== 'SR_LATCH' &&
+          node.data.gateType !== 'D_FLIPFLOP') {
+        const inp = resolvedInputs.get(nodeId) ?? {};
+        const i0 = inp['input-0'] ?? 0;
+        const i1 = inp['input-1'] ?? 0;
+        if (node.data.gateType === 'OUTPUT') {
+          signalMap.set(nodeId, { 'output-0': i0 });
+        } else {
+          signalMap.set(nodeId, { 'output-0': evalGate(node.data.gateType, i0, i1) });
+        }
       }
+
+      (outEdges.get(nodeId) ?? []).forEach(edge => {
+        const sig = (signalMap.get(nodeId)?.[edge.sourceHandle ?? 'output-0'] ?? 0) as SignalValue;
+        const ti = resolvedInputs.get(edge.target) ?? {};
+        ti[edge.targetHandle ?? 'input-0'] = sig;
+        resolvedInputs.set(edge.target, ti);
+
+        const tNode = nodes.find(n => n.id === edge.target);
+        if (tNode && tNode.data.gateType !== 'SR_LATCH' && tNode.data.gateType !== 'D_FLIPFLOP') {
+          const nd = (remainingInputs.get(edge.target) ?? 0) - 1;
+          remainingInputs.set(edge.target, nd);
+          if (nd === 0) queue.push(edge.target);
+        }
+      });
     }
+  };
 
-    (outEdges.get(nodeId) ?? []).forEach(edge => {
-      const sig = (signalMap.get(nodeId)?.[edge.sourceHandle ?? 'output-0'] ?? 0) as SignalValue;
-      const ti = resolvedInputs.get(edge.target) ?? {};
-      ti[edge.targetHandle ?? 'input-0'] = sig;
-      resolvedInputs.set(edge.target, ti);
-
-      const tNode = nodes.find(n => n.id === edge.target);
-      if (tNode && tNode.data.gateType !== 'SR_LATCH' && tNode.data.gateType !== 'D_FLIPFLOP') {
-        const nd = (inDegree.get(edge.target) ?? 0) - 1;
-        inDegree.set(edge.target, nd);
-        if (nd === 0) queue.push(edge.target);
-      }
-    });
-  }
+  propagateCombinational();
 
   // Post-pass: evaluate sequential nodes
   nodes.forEach(node => {
@@ -118,6 +123,9 @@ export function simulateCircuit(
       sequentialStates.set(node.id, { Q, Qn, prevClk: CLK as SignalValue });
     }
   });
+
+  // Settle downstream gates with the new state without sampling sequential nodes again.
+  if (sequentialStates.size > 0) propagateCombinational();
 
   return { signalMap, sequentialStates };
 }
