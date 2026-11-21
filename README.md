@@ -2,6 +2,8 @@
 
 LogicLab is a browser-based logic circuit simulator. Build circuits by connecting logic gates, input switches, and output LEDs on an interactive canvas. See signals update as you change inputs, and generate truth tables for combinational circuits.
 
+[Try LogicLab online](https://thevaibhavgarg.github.io/logiclab/) without installing anything.
+
 ## Features
 
 - Drag-and-drop circuit editor with a zoomable, pannable canvas
@@ -75,6 +77,20 @@ input toggling, truth tables, and saving. You can also import the ready-made
 ## Built with
 
 React, TypeScript, Vite, React Flow, Zustand, and Tailwind CSS.
+
+## Deployment
+
+The [GitHub Actions workflow](./.github/workflows/ci.yml) deploys to
+[GitHub Pages](https://thevaibhavgarg.github.io/logiclab/) after tests, linting,
+and the build succeed on `main`. Pull requests run checks but do not deploy.
+
+For your own fork, enable **Settings → Pages → Source → GitHub Actions**.
+The Vite base path is `/logiclab/`; update `base` in [vite.config.ts](./vite.config.ts)
+if you rename the repository, or use `/` for a root-level custom domain.
+The deployed files come from `dist/`, not the source directory.
+
+Circuit saves belong to each visitor's browser and site address. Use
+**Export/Import** to transfer circuits between local development and the hosted site.
 
 ## Contributing
 
